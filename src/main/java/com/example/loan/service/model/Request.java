@@ -1,7 +1,5 @@
 package com.example.loan.service.model;
 
-import org.springframework.http.ResponseEntity;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

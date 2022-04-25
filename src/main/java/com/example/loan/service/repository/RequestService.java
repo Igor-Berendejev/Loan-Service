@@ -8,31 +8,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RequestRepository {
+public class RequestService {
 
-    private final Map<Integer, Request> requests;
+    private final Map<Integer, Request> requestsRepository;
 
-    public RequestRepository(Map<Integer, Request> requests) {
-        this.requests = requests;
+    public RequestService(Map<Integer, Request> requestsRepository) {
+        this.requestsRepository = requestsRepository;
     }
 
     public Request addRequest(Request request) {
-        requests.put(request.getId(), request);
+        requestsRepository.put(request.getId(), request);
         return request;
     }
 
     public List<Request> getManagersPendingRequests(Manager manager) {
         List<Request> pendingRequests = new ArrayList<>();
-        for (Integer r : requests.keySet()) {
-            if (requests.get(r).getApprovers().containsKey(manager) &&
-                    requests.get(r).getApprovers().get(manager).equals(Decision.PENDING))
-                pendingRequests.add(requests.get(r));
+        for (Integer r : requestsRepository.keySet()) {
+            if (requestsRepository.get(r).getApprovers().containsKey(manager) &&
+                    requestsRepository.get(r).getApprovers().get(manager).equals(Decision.PENDING))
+                pendingRequests.add(requestsRepository.get(r));
         }
         return pendingRequests;
     }
 
     public Request updateRequestDecision(Integer id, Manager manager, String customerID, Decision decision) {
-        Request request = requests.get(id);
+        Request request = requestsRepository.get(id);
         if (request.getApprovers().containsKey(manager) &&
                 request.getCustomerID().equals(customerID) &&
                 request.getApprovers().get(manager).equals(Decision.PENDING)) {
@@ -41,7 +41,11 @@ public class RequestRepository {
         return request;
     }
 
-    public Map<Integer, Request> getRequests() {
-        return requests;
+    public Map<Integer, Request> getRequestsRepository() {
+        return requestsRepository;
+    }
+
+    public Request getRequestByID(int id) {
+        return requestsRepository.get(id);
     }
 }
