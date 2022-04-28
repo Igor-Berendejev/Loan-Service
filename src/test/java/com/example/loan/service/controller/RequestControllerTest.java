@@ -3,7 +3,6 @@ package com.example.loan.service.controller;
 import com.example.loan.service.model.Manager;
 import com.example.loan.service.model.Request;
 import com.example.loan.service.repository.RequestService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +12,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(ContractController.class)
-class ContractControllerTest {
+@WebMvcTest(RequestController.class)
+class RequestControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -47,14 +45,13 @@ class ContractControllerTest {
                 "}";
 
         mvc.perform(MockMvcRequestBuilders.post("/api/requests")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(jsonS))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(jsonS))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(request.toString()));
+                .andExpect(content().string(request.toString()));
     }
 
     @Test
-    void badRequestWhenInvalidID() throws Exception {
+    void badRequestWhenInvalidIDTest() throws Exception {
         String jsonS = "{\n" +
                 "    \"customerID\": \"00-05/*-PPL\",\n" +
                 "    \"amount\": 55.96,\n" +
@@ -65,18 +62,7 @@ class ContractControllerTest {
                 "}";
 
         mvc.perform(MockMvcRequestBuilders.post("/api/requests")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(jsonS))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(jsonS))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @Disabled
-    void getPendingRequest() {
-    }
-
-    @Test
-    @Disabled
-    void updateDecision() {
     }
 }

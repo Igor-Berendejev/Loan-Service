@@ -66,6 +66,26 @@ class RequestServiceTest {
     }
 
     @Test
+    void approvedRequestsAddedToContractsRepositoryTest() {
+        Request request1 = new Request("00-117L-PPL", 55.90f, List.of(Manager.JOHN_JOHNSON));
+        Request request2 = new Request("11-117L-PPL", 66.90f, List.of(Manager.JOHN_JOHNSON));
+        Request request3 = new Request("22-117L-PPL", 77.90f, List.of(Manager.JOHN_JOHNSON));
+        service.addRequest(request1);
+        service.addRequest(request2);
+        service.addRequest(request3);
+        // first APPROVED request should get added to contracts repository
+        service.updateRequestDecision(1, Manager.JOHN_JOHNSON, "00-117L-PPL", Decision.APPROVED);
+        // DECLINED request should NOT get added to contracts repository
+        service.updateRequestDecision(2, Manager.JOHN_JOHNSON, "11-117L-PPL", Decision.DECLINED);
+        // second APPROVED request should get added to contracts repository
+        service.updateRequestDecision(3, Manager.JOHN_JOHNSON, "22-117L-PPL", Decision.APPROVED);
+
+        assertEquals(2, service.getContractsRepository().size());
+        assertEquals(1, service.getContractsRepository().getFirst().getRequestID());
+        assertEquals(3, service.getContractsRepository().getLast().getRequestID());
+    }
+
+    @Test
     void managerCannotUpdateWhenNotAssigned() {
         Request request = new Request("00-117L-PPL", 55.90f, List.of(Manager.ANGELA_WHITE, Manager.JOHN_JOHNSON));
         service.addRequest(request);

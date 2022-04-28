@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-public class ContractController {
+public class RequestController {
 
     private final RequestService service = new RequestService(new HashMap<>());
 
@@ -33,11 +33,21 @@ public class ContractController {
         return service.getManagersPendingRequests(m);
     }
 
-    @PutMapping("api/{id}/{customerID}/{manager}")
+    @PutMapping("/api/{id}/{customerID}/{manager}")
     public ResponseEntity<String> updateDecision(@PathVariable String id, @PathVariable String customerID,
-                                                 @PathVariable String manager, @RequestBody Decision decision) {
-        int requestId = Integer.parseInt(id);
-        Manager m = Manager.valueOf(manager);
+                                                 @PathVariable String manager, @RequestBody String decisionString) {
+
+        int requestId;
+        Manager m;
+        Decision decision;
+        try {
+            requestId = Integer.parseInt(id);
+            m = Manager.valueOf(manager);
+            decision = Decision.valueOf(decisionString);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Invalid input for request id, manager or decision", HttpStatus.BAD_REQUEST);
+        }
+
         if (!Validator.isValidRequestId(service, requestId))
             return new ResponseEntity<>("Invalid request ID", HttpStatus.BAD_REQUEST);
         if (!Validator.requestBelongsToCustomer(customerID, service.getRequestByID(requestId)))
@@ -47,5 +57,10 @@ public class ContractController {
 
         return new ResponseEntity<>(service.updateRequestDecision(requestId, m, customerID, decision).toString(),
                 HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/api/statistics")
+    public String getStats(@RequestParam(name = "period", defaultValue = "60") String period) {
+        return service.getStatistics(Integer.parseInt(period));
     }
 }

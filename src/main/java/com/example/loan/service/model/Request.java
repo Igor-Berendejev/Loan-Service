@@ -54,6 +54,10 @@ public class Request {
         this.approvers = approvers;
     }
 
+    public boolean isApproved() {
+        return approvers.values().stream().allMatch(d -> d.equals(Decision.APPROVED));
+    }
+
     @Override
     public String toString() {
         return "Request: [id: " + id +
