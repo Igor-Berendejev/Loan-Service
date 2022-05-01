@@ -21,7 +21,9 @@ public class RequestService {
     }
 
     public Request addRequest(Request request) {
-        requestsRepository.put(request.getId(), request);
+        synchronized (requestsRepository) {
+            requestsRepository.put(request.getId(), request);
+        }
         return request;
     }
 

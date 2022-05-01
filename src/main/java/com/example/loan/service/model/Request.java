@@ -3,23 +3,22 @@ package com.example.loan.service.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Request {
-    private static AtomicInteger count = new AtomicInteger(1);
-    private Integer id;
+    private static int count = 1;
+    private int id;
     private String customerID;
     private float amount;
     private Map<Manager, Decision> approvers;
 
     public Request(String customerID, float amount, List<Manager> approvers) {
-        this.id = count.intValue();
+        this.id = count;
         this.customerID = customerID;
         this.amount = amount;
         this.approvers = new HashMap<>();
         approvers.forEach(v -> this.approvers.put(v, Decision.PENDING));
-        count.incrementAndGet();
+        count++;
     }
 
     public int getId() {
@@ -70,7 +69,7 @@ public class Request {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return id;
     }
 
     @Override
@@ -78,6 +77,6 @@ public class Request {
         if (this == obj) return true;
         if (obj == null || obj.getClass() != getClass()) return false;
         Request request = (Request) obj;
-        return id.equals(request.getId());
+        return id == request.getId();
     }
 }
