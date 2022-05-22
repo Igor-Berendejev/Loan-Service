@@ -12,7 +12,7 @@ public class Validator {
     private Validator() {
     }
 
-    private static final Pattern pattern = Pattern.compile("\\w{2}-\\w{4}-\\w{3}");
+    private static final Pattern pattern = Pattern.compile("[a-zA-Z0-9]{2}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{3}");
 
     public static boolean isCustomerIdValid(Request request) {
         Matcher matcher = pattern.matcher(request.getCustomerID());
@@ -44,5 +44,10 @@ public class Validator {
 
     public static boolean requestBelongsToManager(Manager manager, Request request) {
         return request.getApprovers().containsKey(manager);
+    }
+
+    public static boolean isValidNumberOfApprovers(Request request) {
+        int numberOfApprovers = request.getApprovers().size();
+        return (numberOfApprovers > 0 && numberOfApprovers < 4);
     }
 }

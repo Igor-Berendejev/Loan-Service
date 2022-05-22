@@ -3,6 +3,7 @@ package com.example.loan.service.controller;
 import com.example.loan.service.model.Manager;
 import com.example.loan.service.model.Request;
 import com.example.loan.service.repository.RequestService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,6 +30,20 @@ class RequestControllerTest {
 
     @MockBean
     RequestService service;
+
+    @BeforeEach
+    void setCountInRequest() {
+        Class clazz = Request.class;
+        try {
+            Field countField = clazz.getDeclaredField("count");
+            countField.setAccessible(true);
+            countField.setInt(null, 1);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     void addRequestTest() throws Exception {

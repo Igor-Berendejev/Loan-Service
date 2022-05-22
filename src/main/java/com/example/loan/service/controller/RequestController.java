@@ -20,9 +20,11 @@ public class RequestController {
         if (!Validator.isCustomerIdValid(request))
             return new ResponseEntity<>("Invalid customer ID", HttpStatus.BAD_REQUEST);
         if (Validator.customerHasPendingRequests(request, service))
-            return new ResponseEntity<>("Customer has pending requests", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Customer has pending requests", HttpStatus.CONFLICT);
         if (!Validator.isRequestAmountValid(request))
             return new ResponseEntity<>("Invalid loan amount", HttpStatus.BAD_REQUEST);
+        if (!Validator.isValidNumberOfApprovers(request))
+            return new ResponseEntity<>("There must be from 1 to 3 approvers", HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<>(service.addRequest(request).toString(), HttpStatus.OK);
     }

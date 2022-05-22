@@ -6,6 +6,7 @@ import com.example.loan.service.model.Request;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,20 @@ class RequestServiceTest {
     @BeforeEach
     void initService() {
         service = new RequestService(new HashMap<>());
+    }
+
+    @BeforeEach
+    void setCountInRequest() {
+        Class clazz = Request.class;
+        try {
+            Field countField = clazz.getDeclaredField("count");
+            countField.setAccessible(true);
+            countField.setInt(null, 1);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
